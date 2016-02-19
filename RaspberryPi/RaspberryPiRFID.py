@@ -19,10 +19,10 @@ __author__ = "Josh Pritt"
 __copyright__ = "Copyright 2015, Melbourne Makerspace"
 __credits__ = ["Josh Pritt"]
 __license__ = "GPL"
-__version__ = "2.0.0"
+__version__ = "2.1.0"
 __maintainer__ = "Josh Pritt"
 __email__ = "ramgarden@gmail.com"
-__status__ = "User Validation"
+__status__ = "In Production"
 
 import serial
 import re, sys, signal, os, time, datetime
@@ -207,10 +207,10 @@ def unlock_door(duration):
 def sendEmail(rfidSerial):
     app_log.info('Sending email to ' + TO)
     try:
-		global SMTPSERVER
-		global USERNAME
-		global PASSWORD
-		#Next, log in to the server
+        global SMTPSERVER
+        global USERNAME
+        global PASSWORD
+        #Next, log in to the server
         server = smtplib.SMTP(SMTPSERVER)
         server.ehlo()
         server.starttls()
@@ -258,7 +258,7 @@ if __name__ == '__main__':
     app_log.info("======Starting ACON RFID Lock Script======")
     buffer = ''
     pipe = os.pipe()
-	global SERIALDEVICE
+    global SERIALDEVICE
     ser = serial.Serial(SERIALDEVICE, BITRATE, timeout=0)
     rfidPattern = re.compile(b'[\W_]+')
     signal.signal(signal.SIGINT, signal_handler)

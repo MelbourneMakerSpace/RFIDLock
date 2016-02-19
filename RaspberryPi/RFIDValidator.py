@@ -15,10 +15,10 @@ __author__ = "Josh Pritt"
 __copyright__ = "Copyright 2015, Melbourne Makerspace"
 __credits__ = ["Josh Pritt"]
 __license__ = "GPL"
-__version__ = "2.0.0"
+__version__ = "2.1.0"
 __maintainer__ = "Josh Pritt"
 __email__ = "ramgarden@gmail.com"
-__status__ = "User Validation"
+__status__ = "In Production"
 
 import requests
 import json
@@ -65,3 +65,21 @@ def getWhitelist():
 
     return whitelist
 
+def logDoorAccess(rfid):
+    """
+    This method passes the given rfid serial string as a parameter to a REST URL
+    that simply logs the serial string with a timestamp in the ACCESSLOG table
+    in the Seltzer DB.  This allows for an SQL query that answers the questions:
+    Who was the last person to swipe their card? and When was the last time
+    person X swiped their card?
+    :param rfid: the RFID serial string read by the RFID reader
+    :return: nothing
+    """
+    url = 'http://' + SELTZERSERVER + '/crm/api/query.php?action=logDoorAccess&rfid=' + rfid
+    payload = ''
+    response = requests.get(url, data=payload, timeout=30.0)
+
+    #the response should be a simple JSON object with "OK" if it logged to the DB
+    # without errors, or a single key value pair with "ERROR:<error message>" if
+    # there was an error on the server side.
+    return json.loads(response.content)
