@@ -106,7 +106,8 @@ function getMemberLastPaymentTimestamp($rfid)
 function getRFIDWhitelist()
 {
 	require('db.inc.php');
-	
+	$db_connect = $con;
+
 	$whiteList = array();
 	
 	//get everyone's plan prices and balances and check here
@@ -141,8 +142,9 @@ function getRFIDWhitelist()
 // their current montly plan price, FALSE or error string if not.
 function doorLockCheck($rfid)
 {
-	require('db.inc.php');
-	
+ 	require('db.inc.php');
+	$db_connect = $con;
+  
 	$rfid = testInput($rfid);
 	
 	//get the key owner and their current membership plan
