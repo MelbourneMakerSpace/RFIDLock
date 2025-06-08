@@ -128,8 +128,8 @@ function getRFIDWhitelist()
             $serial = $r["serial"];
             if ($serial != NULL)
             {
-				$whiteList[] = array("firstName"=>$firstName,"lastName"=>$lastName,"serial"=>$serial);	
-			}
+				           $whiteList[] = array("serial"=>$serial);	
+			         }
         }
     }
 	
