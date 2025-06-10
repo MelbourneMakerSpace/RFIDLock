@@ -194,6 +194,24 @@ function doorLockCheck($rfid)
 	return $jsonResponse;
 }
 
+//action=getAccessLog
+//returns JSON array of the last 7 days of card access
+function getAccessLog()
+{	
+	//date_default_timezone_set('America/Phoenix'); // timezone of the server
+	//$date = new DateTime($input, new DateTimeZone('America/New_York')); // USER's timezone
+	//$date->setTimezone(new DateTimeZone('UTC'));
+	//echo $date->format('Y-m-d H:i:s');
+
+	$query = "SELECT accesslog.id, contact.cid, CONCAT( firstname,  ' ', lastname ) AS member, access, reason, swipetime 
+			FROM accesslog
+			LEFT JOIN `key` ON accesslog.serial = key.serial
+			LEFT JOIN contact ON key.cid = contact.cid
+			where swipetime >= DATE_ADD(curdate(),INTERVAL -7 DAY) 
+			ORDER BY swipetime desc";
+
+	return runSqlQuery($query, "-4:00");
+}
 
 //////////////////////////////////////
 //other functions for service go here. 
@@ -205,7 +223,7 @@ function doorLockCheck($rfid)
 
 
 $possible_url = array("getMemberInfoByRFID", "getMemberLastPaymentTimestamp", "getRFIDWhitelist", "otherFunctionName",
-	"doorLockCheck");
+	"doorLockCheck","getAccessLog");
 
 $value = "An error has occurred";
 
@@ -224,6 +242,9 @@ if (isset($_GET["action"]) && in_array($_GET["action"], $possible_url))
         break;
       case "doorLockCheck":
         $value = doorLockCheck($_GET['rfid']);
+        break;
+      case "getAccessLog":
+        $value = getAccessLog();
         break;
       case "get_app":
         if (isset($_GET["id"]))
