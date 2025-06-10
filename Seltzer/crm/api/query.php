@@ -213,6 +213,42 @@ function getAccessLog()
 	return runSqlQuery($query, "-4:00");
 }
 
+//set timezone parameter if you want to query out any date or timestamp fields.
+function runSqlQuery($query, $timezone="")
+{
+    require('db.inc.php');
+	
+    $ArrayToReturn = array();
+	
+	if (strlen($timezone) > 0)
+	{
+		$statement = "SET time_zone = '" . $timezone . "';";
+		mysqli_query($con, $statement);
+	}
+	
+    $result = mysqli_query($con, $query) 
+        or die(json_encode(array("getERROR"=>mysqli_error($con))));
+
+	if (is_object($result))
+	{
+		$finfo = $result->fetch_fields();
+		
+		while($r = mysqli_fetch_assoc($result))
+		{
+			$currentRecord=array();
+			
+			foreach ($finfo as $val) {
+				$currentRecord[$val->name] = $r[$val->name];
+			}
+
+			$ArrayToReturn[] = $currentRecord;
+		}
+		$result->close();
+	}
+    
+    return $ArrayToReturn;
+}
+
 //////////////////////////////////////
 //other functions for service go here. 
 // don't forget to add the action to the 
